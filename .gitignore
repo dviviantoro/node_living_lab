@@ -1,0 +1,5 @@
+.pio
+.vscode/
+test/ambient_basic_backup
+test/ambient_full
+test/surface_backup
