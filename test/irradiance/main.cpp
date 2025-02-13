@@ -61,9 +61,9 @@ void loop() {
         aht.getEvent(&humidity, &temp);
         double irradiance = agregateData();
 
-        String msg = DEVICE_ID + String(";");
-        msg += String(irradiance) + ";";
-        msg += String(temp.temperature) + ";";
+        String msg = DEVICE_ID + String(",");
+        msg += String(irradiance) + ",";
+        msg += String(temp.temperature) + ",";
         msg += String(humidity.relative_humidity);
         Serial.println(msg);
         sendStringData(msg);
