@@ -6,18 +6,14 @@ SoftwareSerial espSerial(ESP01_RX, ESP01_TX);
 ADS1115 ads1(0x48);
 ADS1115 ads2(0x49);
 
-// PZEM004Tv30 pzem(14, 6); // ch1 pcb2
-// PZEM004Tv30 pzem(10, 18); // ch2 pcb2
-// PZEM004Tv30 pzem(8, 4); // ch3 pcb1
-// PZEM004Tv30 pzem(9, 5); // ch4 pcb3
-// PZEM004Tv30 pzem(15, 7); // ch5 pcb5
-// PZEM004Tv30 pzem(16, 19); // ch6 pcb5
-
 const int PZEM_RX_PINS[NUM_SENSORS] = {14, 10, 8, 9, 15, 16};
 const int PZEM_TX_PINS[NUM_SENSORS] = {6, 18, 4, 5, 7, 19};
 
 String ac_channels[6] = {AC_CH_1, AC_CH_2, AC_CH_3, AC_CH_4, AC_CH_5, AC_CH_6};
-String dc_channels[4] = {DC_CH_1, DC_CH_2, DC_CH_3, DC_CH_4};
+
+String dc_channels_name[4] = {DC_CH_1, DC_CH_2, DC_CH_3, DC_CH_4};
+int dc_channels_cur[4] = {3, 0, 2, 1};
+int dc_channels_vol[4] = {0, 3, 1, 2};
 
 SoftwareSerial pzemSerial[NUM_SENSORS] = {
     SoftwareSerial(PZEM_RX_PINS[0], PZEM_TX_PINS[0]),
@@ -62,15 +58,15 @@ String compileDataADS(int channel) {
     float voltage = 0;
     
     for (int i = 0; i < NUM_SAMPLES; i ++) {
-        adcVTSum += ads1.readADC(channel);
-        adcCTSum += ads2.readADC(channel);
+        adcVTSum += ads1.readADC(dc_channels_vol[channel]);
+        adcCTSum += ads2.readADC(dc_channels_cur[channel]);
     }
     
     adcVT = adcVTSum / NUM_SAMPLES;
     adcCT = adcCTSum / NUM_SAMPLES;
     // String adsData = String(adcVT) + "," + String(adcCT);
     
-    voltage = adcVTSum;
+    voltage = adcVT;
     current = 0.0111 * adcCT - 214;
     String adsData = String(voltage) + "," + String(current);
     
@@ -158,7 +154,7 @@ void sendDataPZEM() {
 
 void sendDataADS() {
     for (int i = 0; i < NUM_DC_CHANNELS; i++) {
-        String payload = dc_channels[i] + "," + compileDataADS(i);
+        String payload = dc_channels_name[i] + "," + compileDataADS(i);
         espSerial.println(payload);
         Serial.println(payload);
         delay(300);
