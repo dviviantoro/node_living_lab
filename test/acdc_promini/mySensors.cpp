@@ -16,8 +16,6 @@ ADS1115 ads2(0x49);
 const int PZEM_RX_PINS[NUM_SENSORS] = {14, 10, 8, 9, 15, 16};
 const int PZEM_TX_PINS[NUM_SENSORS] = {6, 18, 4, 5, 7, 19};
 
-// const int ch_adsCT[NUM_DC_CHANNELS] = {}
-
 String ac_channels[6] = {AC_CH_1, AC_CH_2, AC_CH_3, AC_CH_4, AC_CH_5, AC_CH_6};
 String dc_channels[4] = {DC_CH_1, DC_CH_2, DC_CH_3, DC_CH_4};
 
@@ -60,6 +58,8 @@ String compileDataADS(int channel) {
     float adcCT = 0;
     float adcVTSum = 0;
     float adcCTSum = 0;
+    float current = 0;
+    float voltage = 0;
     
     for (int i = 0; i < NUM_SAMPLES; i ++) {
         adcVTSum += ads1.readADC(channel);
@@ -68,8 +68,12 @@ String compileDataADS(int channel) {
     
     adcVT = adcVTSum / NUM_SAMPLES;
     adcCT = adcCTSum / NUM_SAMPLES;
+    // String adsData = String(adcVT) + "," + String(adcCT);
     
-    String adsData = String(adcVT) + "," + String(adcCT);
+    voltage = adcVTSum;
+    current = 0.0111 * adcCT - 214;
+    String adsData = String(voltage) + "," + String(current);
+    
     return adsData;
 }
 
