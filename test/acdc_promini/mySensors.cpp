@@ -6,8 +6,15 @@ SoftwareSerial espSerial(ESP01_RX, ESP01_TX);
 ADS1115 ads1(0x48);
 ADS1115 ads2(0x49);
 
-const int PZEM_RX_PINS[NUM_SENSORS] = {4, 6, 8, 10, 14, 18};
-const int PZEM_TX_PINS[NUM_SENSORS] = {5, 7, 9, 16, 15, 19};
+// PZEM004Tv30 pzem(14, 6); // ch1 pcb2
+// PZEM004Tv30 pzem(10, 18); // ch2 pcb2
+// PZEM004Tv30 pzem(8, 4); // ch3 pcb1
+// PZEM004Tv30 pzem(9, 5); // ch4 pcb3
+// PZEM004Tv30 pzem(15, 7); // ch5 pcb5
+// PZEM004Tv30 pzem(16, 19); // ch6 pcb5
+
+const int PZEM_RX_PINS[NUM_SENSORS] = {14, 10, 8, 9, 15, 16};
+const int PZEM_TX_PINS[NUM_SENSORS] = {6, 18, 4, 5, 7, 19};
 
 // const int ch_adsCT[NUM_DC_CHANNELS] = {}
 

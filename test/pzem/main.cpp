@@ -1,44 +1,91 @@
-#include <Arduino.h>
 #include <PZEM004Tv30.h>
-#include <SoftwareSerial.h>
+#include <Wire.h>
 
-SoftwareSerial pzemSWSerial(9,8);
-PZEM004Tv30 pzem(pzemSWSerial);
+// 1 fail
+// PZEM004Tv30 pzem(5, 4);
+// 2 fail
+// PZEM004Tv30 pzem(7, 6);
+// 3 pass
+// PZEM004Tv30 pzem(8, 9);
+// 4 fail
+// PZEM004Tv30 pzem(10,16);
+// 5 pass
+// PZEM004Tv30 pzem(15,14);
+// 6  fail
+// PZEM004Tv30 pzem(18,19);
+
+// pair 1
+// PZEM004Tv30 pzem(8, 4); // ch3 pcb1
+// PZEM004Tv30 pzem(9, 5); // ch4 pcb3
+
+// pair 2
+// PZEM004Tv30 pzem(14, 6); // ch1 pcb2
+// PZEM004Tv30 pzem(15, 7); // ch5 pcb5
+
+// pair 3
+// PZEM004Tv30 pzem(10, 18); // ch2 pcb2
+// PZEM004Tv30 pzem(16, 19); // ch6 pcb5
+
 
 void setup() {
-    Serial.begin(9600);
-    // pzem = PZEM004Tv30(pzemSWSerial);
-    // pzemSWSerial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop() {
-    static uint8_t addr = SET_ADDRESS;
+  float voltage = pzem.voltage();
+  if (voltage != NAN) {
+    Serial.print("Voltage: ");
+    Serial.print(voltage);
+    Serial.println("V");
+  } else {
+    Serial.println("Error reading voltage");
+  }
 
-    // Print out current custom address
-    Serial.print("Previous address:   0x");
-    Serial.println(pzem.readAddress(), HEX);
+  float current = pzem.current();
+  if (current != NAN) {
+    Serial.print("Current: ");
+    Serial.print(current);
+    Serial.println("A");
+  } else {
+    Serial.println("Error reading current");
+  }
 
-    // // Set the custom address
-    // Serial.print("Setting address to: 0x");
-    // Serial.println(addr, HEX);
-    // if(!pzem.setAddress(addr))
-    // {
-    //   // Setting custom address failed. Probably no PZEM connected
-    //   Serial.println("Error setting address.");
-    // } else {
-    //   // Print out the new custom address
-    //   Serial.print("Current address:    0x");
-    //   Serial.println(pzem.readAddress(), HEX);
-    //   Serial.println();
-    // }
+  float power = pzem.power();
+  if (current != NAN) {
+    Serial.print("Power: ");
+    Serial.print(power);
+    Serial.println("W");
+  } else {
+    Serial.println("Error reading power");
+  }
 
-    // // Increment the address every loop if desired
-    // if(INCREMENT){
-    //   addr++;
-    //   if(addr >= PZEM_DEFAULT_ADDR)
-    //     addr = 0x01;
-    // }
+  float energy = pzem.energy();
+  if (current != NAN) {
+    Serial.print("Energy: ");
+    Serial.print(energy, 3);
+    Serial.println("kWh");
 
-    delay(5000);
+  } else {
+    Serial.println("Error reading energy");
+  }
 
+  float frequency = pzem.frequency();
+  if (current != NAN) {
+    Serial.print("Frequency: ");
+    Serial.print(frequency, 1);
+    Serial.println("Hz");
+  } else {
+    Serial.println("Error reading frequency");
+  }
+
+  float pf = pzem.pf();
+  if (current != NAN) {
+    Serial.print("PF: ");
+    Serial.println(pf);
+  } else {
+    Serial.println("Error reading power factor");
+  }
+
+  Serial.println();
+  delay(2000);
 }
