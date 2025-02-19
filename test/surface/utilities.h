@@ -1,7 +1,7 @@
 
 #define DEVICE          "SUR-1"
 #define uS_TO_S_FACTOR  1000000
-#define TIME_TO_SLEEP   5 //need to discuss
+#define TIME_TO_SLEEP   10 //need to discuss
 #define VAL_SAMPLING   20
 #define MAX_ATTEMP      5 //need to discuss
 

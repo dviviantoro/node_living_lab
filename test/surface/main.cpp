@@ -108,14 +108,15 @@ void setup() {
     sendStringData(payload);
     delay(100);
 
-    if (fail_sendDataCount >= MAX_ATTEMP) {
-        fail_sendDataCount = 0;
-        delay(100);
-        esp_deep_sleep_enable_gpio_wakeup(BITMASK_PIN_3, ESP_GPIO_WAKEUP_GPIO_HIGH);
-    } else {
-        esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-    }
+    // if (fail_sendDataCount >= MAX_ATTEMP) {
+    //     fail_sendDataCount = 0;
+    //     delay(100);
+    //     esp_deep_sleep_enable_gpio_wakeup(BITMASK_PIN_3, ESP_GPIO_WAKEUP_GPIO_HIGH);
+    // } else {
+    //     esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    // }
     
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
     Serial.println(fail_sendDataCount);
     Serial.println("Going to sleep now");
     digitalWrite(SWITCH_ON_PIN, LOW);
