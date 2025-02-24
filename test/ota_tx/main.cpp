@@ -1,24 +1,26 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <esp_now.h>
-#include <mySensors.h>
+// #include <mySensors.h>
 #include <utilities.h>
+#include <esp_wifi.h>
 
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <ElegantOTA.h>
 
-const char* ssids[] = {"hottuf", "hotgalaxy", "SSID_3"};
-const char* passwords[] = {"bismillah", "bismillah", "password_3"};
+const char* ssids[] = {"hottuf", "hotgalaxy", "raspberry123"};
+const char* passwords[] = {"bismillah", "bismillah", "nasigodhog1"};
 const int numNetworks = 3;
 
 RTC_DATA_ATTR int fail_sendDataCount = 0;
-uint8_t broadcastAddress[] = {0x10, 0x52, 0x1C, 0xF3, 0xE7, 0x3C};
+// MAC: dc:54:75:f1:7b:9c
+uint8_t broadcastAddress[] = {0xDC, 0x54, 0x75, 0xF1, 0x7B, 0x9C};
 
 unsigned long previousMillisSendData = 0;
 unsigned long previousMillisCheckWifi = 0;
-const long intervalSendData = 10000;
-const long intervalCheckWifi = 60000;
+const long intervalSendData = 3000;
+const long intervalCheckWifi = 10000;
 
 bool wifiConnected = false;
 
@@ -59,20 +61,6 @@ void sendStringData(String msg) {
     }
 }
 
-void testFunc() {
-    String payload = DEVICE + String(",") + compileData();
-    Serial.println(payload);
-    sendStringData(payload);
-    Serial.println(fail_sendDataCount);
-    
-    if (fail_sendDataCount >= MAX_ATTEMP) {
-        fail_sendDataCount = 0;
-        Serial.println("harusnya sleep nih");
-        esp_deep_sleep_enable_gpio_wakeup(BITMASK_PIN_3, ESP_GPIO_WAKEUP_GPIO_HIGH);
-        esp_deep_sleep_start();
-    }
-}
-
 void initElegantOTA() {
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "text/plain", "Hi! I am ESP32.");
@@ -85,6 +73,9 @@ void initElegantOTA() {
 }
 
 void connectToWiFi() {
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_STA);
+
     int currentNetwork = 0;
   
     // Loop through each SSID until connected
@@ -98,7 +89,7 @@ void connectToWiFi() {
     
         // Attempt to connect to the Wi-Fi network
         while (WiFi.status() != WL_CONNECTED) {
-            if (millis() - startAttemptTime >= 10000) { // 10 seconds timeout
+            if (millis() - startAttemptTime >= 5000) { // 10 seconds timeout
                 Serial.print("Failed to connect to ");
                 Serial.println(ssids[currentNetwork]);
                 break; // Move to the next network
@@ -124,37 +115,46 @@ void connectToWiFi() {
     if (!wifiConnected) {
       Serial.println("Unable to connect to any of the available WiFi networks.");
     }
-  }
+}
+
+void resetWifiCahnnel() {
+    if (!wifiConnected) {
+        WiFi.disconnect(true);
+        WiFi.mode(WIFI_STA);
+        esp_wifi_set_channel(1, WIFI_SECOND_CHAN_NONE);
+    }
+}
 
 void setup() {
     Serial.begin(115200);
-    WiFi.mode(WIFI_STA);
-    
     connectToWiFi();
+    resetWifiCahnnel();
     initESPNOW();
-    initSensors();
 }
 
+int counter = 0;
 void loop() {   
     unsigned long currentMillis = millis();
-
+    
     if (currentMillis - previousMillisSendData >= intervalSendData) {
         previousMillisSendData = currentMillis;
 
-        String payload = DEVICE + String(",") + compileData();
+        counter ++;
+        if (counter > 10) {
+            ESP.restart();
+        }
+        
+        uint8_t wifi_channel = WiFi.channel();
+        Serial.print("Transmitter Wi-Fi Channel: ");
+        Serial.println(wifi_channel);
+
+        String payload = DEVICE + String(",") + "test123,567,890,";
         Serial.println(payload);
         sendStringData(payload);
     }
 
-    if (currentMillis - previousMillisCheckWifi >= intervalCheckWifi) {
-        previousMillisCheckWifi = currentMillis;
-        if (WiFi.status() != WL_CONNECTED) {
-            Serial.println("WiFi connection lost. Attempting to reconnect to all networks...");
-            connectToWiFi(); // Attempt to connect to all available SSIDs
-        }
-    }
-
     if (wifiConnected) {
+        // Serial.println("masuk ota");
         ElegantOTA.loop();
     }
 }
