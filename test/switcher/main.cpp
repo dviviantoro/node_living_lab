@@ -61,7 +61,8 @@ void setup() {
 void loop() {
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= switchInterval) switchFlag = false;
-    switchFlag ? digitalWrite(SW_PIN, HIGH) : digitalWrite(SW_PIN, LOW);
+    // switchFlag ? digitalWrite(SW_PIN, HIGH) : digitalWrite(SW_PIN, LOW);
+    switchFlag ? digitalWrite(SW_PIN, LOW) : digitalWrite(SW_PIN, HIGH);
 
     int reading = digitalRead(BTN_PIN);
     if (reading != lastButtonState) {
@@ -72,7 +73,10 @@ void loop() {
         if (reading != buttonState) {
             buttonState = reading;
             if (buttonState == HIGH) {
-                switchFlag = true;
+                // switchFlag = true;
+                // previousMillis = millis();
+                digitalWrite(SW_PIN, LOW);
+                delay(3000);
             }
         }
     }

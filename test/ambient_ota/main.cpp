@@ -8,8 +8,10 @@
 #include <ESPAsyncWebServer.h>
 #include <ElegantOTA.h>
 
-const char* ssids[] = {"hottuf", "hotgalaxy", "raspberry123"};
-const char* passwords[] = {"bismillah", "bismillah", "nasigodhog1"};
+// const char* ssids[] = {"hottuf", "hotgalaxy", "raspberry123"};
+// const char* passwords[] = {"bismillah", "bismillah", "nasigodhog1"};
+const char* ssids[] = {"hotgalaxy", "raspberry123"};
+const char* passwords[] = {"bismillah", "nasigodhog1"};
 const int numNetworks = 3;
 
 bool wifiConnected = false;

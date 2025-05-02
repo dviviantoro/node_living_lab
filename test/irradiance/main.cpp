@@ -55,7 +55,8 @@ void loop() {
 
     if (currentMillis - sendPreviousMillis >= sendInterval) {
         sendPreviousMillis = currentMillis;
-        sendInterval = random(1000, 30000);
+        // sendInterval = random(1000, 30000);
+        Serial.println("hallo semua");
         
         sensors_event_t humidity, temp;
         aht.getEvent(&humidity, &temp);
@@ -67,5 +68,6 @@ void loop() {
         msg += String(humidity.relative_humidity);
         Serial.println(msg);
         sendStringData(msg);
+
     }
 }

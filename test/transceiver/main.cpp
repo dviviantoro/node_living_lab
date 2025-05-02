@@ -2,7 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <espnow.h>
 
-uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+// dc:4f:22:4f:0b:9d
+uint8_t broadcastAddress[] = {0xDC, 0x4F, 0x22, 0x4F, 0x0B, 0x9D};
 
 // if you need to parse the incoming data
 String getValue(String data, char separator, int index) {
@@ -51,17 +52,9 @@ void setup() {
     esp_now_register_recv_cb(OnDataRecv);
 }
 
-// bool switchFlag = false;
-// int switchInterval = 0;
-
 void loop() {
     if (Serial.available() > 0) {
         String payload = Serial.readString();
         sendStringData(payload);
-
-        // if (getValue(incomingSerial, ',', 0) == "SW") {
-        //     switchFlag = true;
-        //     switchInterval = getValue(incomingSerial, ',', 1).toInt();
-        // }
     }
 }

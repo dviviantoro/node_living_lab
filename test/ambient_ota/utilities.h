@@ -1,4 +1,4 @@
-#define DEVICE          "AMB-1"
+#define DEVICE          "AMB-4"
 #define uS_TO_S_FACTOR  1000000
 #define TIME_TO_SLEEP   10
 #define VBAT_SAMPLING   20
