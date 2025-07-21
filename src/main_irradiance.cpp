@@ -168,13 +168,11 @@ void setup() {
         return;
     }
     esp_now_register_send_cb(OnDataSent);
-    
     for (int i = 0; i < num_addresses; i++) {
         const uint8_t* current_address = all_addresses[i];
         setupPeer(current_address);
         delay(100);
     }
-    
     esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 
     delay(5000);
@@ -187,7 +185,7 @@ void loop() {
     if (wifiConnected) ElegantOTA.loop();
     
     if (currentMillis - sendPreviousMillis >= sendInterval) {
-        sendInterval = random(30000, 40000);
+        sendInterval = random(50000, 60000);
         sendPreviousMillis = currentMillis;
         
         sensors_event_t humidity, temp;

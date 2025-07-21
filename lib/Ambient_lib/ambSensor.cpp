@@ -11,7 +11,7 @@
 // #define BUTTON_PIN      3
 // #define BITMASK_PIN_3   0x08
 // #define LED_PIN         4
-// #define SWITCH_ON_PIN   5
+#define SWITCH_ON_PIN   5
 #define RAIN_SENSOR_PIN 10
 
 SHT2x sht;
@@ -31,11 +31,11 @@ void initSensors() {
     lightMeter.begin(BH1750::ONE_TIME_HIGH_RES_MODE);
     
     // pinMode(BAT_PIN, INPUT);
-    pinMode(RAIN_SENSOR_PIN, INPUT);
-    // pinMode(SWITCH_ON_PIN, OUTPUT);
-    // digitalWrite(SWITCH_ON_PIN, HIGH);
     // pinMode(RAIN_SENSOR_PIN, INPUT);
-    // pinMode(BUTTON_PIN, INPUT);
+    pinMode(SWITCH_ON_PIN, OUTPUT);
+    digitalWrite(SWITCH_ON_PIN, HIGH);
+    pinMode(RAIN_SENSOR_PIN, INPUT);
+    pinMode(BUTTON_PIN, INPUT);
 
     attachInterrupt(digitalPinToInterrupt(RAIN_SENSOR_PIN), hitung_curah_hujan, FALLING);
 }

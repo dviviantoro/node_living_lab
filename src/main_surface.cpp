@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include <ambSensor.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 #include <utilities.h>
 #include <WiFi.h>
 #include <esp_now.h>
@@ -8,9 +9,19 @@
 #include <ESPAsyncWebServer.h>
 #include <ElegantOTA.h>
 
-#define DEVICE_ID       "AMB-3"
+#define DEVICE_ID       "SUR-1"
 #define DEVICE_LAYER    3
+#define VAL_SAMPLING   20
+
 #define BUTTON_PIN      3
+#define SWITCH_ON_PIN   5
+#define OW1_PIN         6
+#define OW2_PIN         7
+
+OneWire oneWire1(OW1_PIN);
+OneWire oneWire2(OW2_PIN);
+DallasTemperature dallas1(&oneWire1);
+DallasTemperature dallas2(&oneWire2);
 
 const uint8_t* all_addresses[] = {
     ambient_indoor,
@@ -156,6 +167,24 @@ void setupPeer(const uint8_t *mac) {
     }
 }
 
+float dallasSample(DallasTemperature dallasN) {
+    uint32_t agregateDallas = 0;
+    for(int i = 0; i < VAL_SAMPLING; i++) {
+        dallasN.requestTemperatures();
+        if (dallasN.getTempCByIndex(0) < 80) {
+            return dallasN.getTempCByIndex(0);
+        }
+    }
+}
+
+String compileData() {
+    float top_temp = dallasSample(dallas1);
+    float bot_temp = dallasSample(dallas2);
+    String myData = String(top_temp) + ",";
+    myData += String(bot_temp);
+    return myData;
+}
+
 void setup() {
     Serial.begin(115200);
     
@@ -163,22 +192,25 @@ void setup() {
     if (!wifiConnected) {
         resetWifiCahnnel();
     }
-    
+
     if (esp_now_init() != ESP_OK) {
         Serial.println("Error initializing ESP-NOW");
         return;
     }
     esp_now_register_send_cb(OnDataSent);
-    
     for (int i = 0; i < num_addresses; i++) {
         const uint8_t* current_address = all_addresses[i];
         setupPeer(current_address);
         delay(100);
     }
-    
     esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 
-    initSensors();
+    delay(5000);
+    pinMode(SWITCH_ON_PIN, OUTPUT);
+    digitalWrite(SWITCH_ON_PIN, HIGH);
+    pinMode(BUTTON_PIN, INPUT);
+    dallas1.begin();
+    dallas2.begin();
     sendInterval = random(1000, 10000);
 }
 
@@ -195,7 +227,7 @@ void loop() {
         payload += String(DEVICE_ID) + String(",");
         payload += compileData();
         Serial.println(payload);
-        
+
         retrySendPayload(payload);
     }
 }
