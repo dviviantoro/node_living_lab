@@ -8,7 +8,7 @@
 // #define MAX_ATTEMP      5
 
 // #define BAT_PIN         2
-// #define BUTTON_PIN      3
+#define BUTTON_PIN      3
 // #define BITMASK_PIN_3   0x08
 // #define LED_PIN         4
 #define SWITCH_ON_PIN   5

@@ -15,7 +15,7 @@
 const uint8_t* all_addresses[] = {
     ambient_indoor,
     ambient_outdoor,
-    ambient_bridge_1,
+    bridge_1,
     irradiance_1,
     surface_1,
     irradiance_2,
@@ -183,6 +183,8 @@ void setup() {
 }
 
 void loop() {
+    ElegantOTA.loop();
+
     unsigned long currentMillis = millis();
     if (digitalRead(BUTTON_PIN)) ESP.restart();
     if (wifiConnected) ElegantOTA.loop();
