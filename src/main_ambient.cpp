@@ -13,10 +13,10 @@
 #define BUTTON_PIN      3
 
 const uint8_t* all_addresses[] = {
-    // dongle,
-    // ambient_1,
+    dongle,
+    ambient_1,
     // ambient_2,
-    bridge_1,
+    // bridge_1,
     // irradiance_1,
     // surface_1,
     // irradiance_2,
