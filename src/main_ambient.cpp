@@ -183,11 +183,6 @@ void setup() {
 }
 
 void loop() {
-    ElegantOTA.loop();
-    if (digitalRead(BUTTON_PIN) == HIGH) {
-        esp_restart();
-    }
-
     unsigned long currentMillis = millis();
     if (digitalRead(BUTTON_PIN)) ESP.restart();
     if (wifiConnected) ElegantOTA.loop();

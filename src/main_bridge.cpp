@@ -13,12 +13,12 @@
 const uint8_t* all_addresses[] = {
     ambient_indoor,
     ambient_outdoor,
-    bridge_1,
-    irradiance_1,
-    surface_1,
-    irradiance_2,
-    surface_2,
-    irradiance_3
+    // bridge_1,
+    // irradiance_1,
+    // surface_1,
+    // irradiance_2,
+    // surface_2,
+    // irradiance_3
 };
 const int num_addresses = sizeof(all_addresses) / sizeof(all_addresses[0]);
 
@@ -177,5 +177,5 @@ void setup() {
 }
 
 void loop() {
-    ElegantOTA.loop();
+    if (wifiConnected) ElegantOTA.loop();
 }

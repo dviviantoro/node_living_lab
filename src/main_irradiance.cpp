@@ -14,7 +14,7 @@
 const uint8_t* all_addresses[] = {
     ambient_indoor,
     ambient_outdoor,
-    ambient_bridge_1,
+    bridge_1,
     irradiance_1,
     surface_1,
     irradiance_2,
