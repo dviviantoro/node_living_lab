@@ -8,19 +8,20 @@
 #include <ESPAsyncWebServer.h>
 #include <ElegantOTA.h>
 
-#define DEVICE_ID       "AMB-3"
-#define DEVICE_LAYER    3
+#define DEVICE_ID       "AMB-2"
+#define DEVICE_LAYER    1
 #define BUTTON_PIN      3
 
 const uint8_t* all_addresses[] = {
-    ambient_indoor,
-    ambient_outdoor,
+    // dongle,
+    // ambient_1,
+    // ambient_2,
     bridge_1,
-    irradiance_1,
-    surface_1,
-    irradiance_2,
-    surface_2,
-    irradiance_3
+    // irradiance_1,
+    // surface_1,
+    // irradiance_2,
+    // surface_2,
+    // irradiance_3
 };
 const int num_addresses = sizeof(all_addresses) / sizeof(all_addresses[0]);
 

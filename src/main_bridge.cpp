@@ -11,8 +11,9 @@
 #define DEVICE_LAYER    3
 
 const uint8_t* all_addresses[] = {
-    ambient_indoor,
-    ambient_outdoor,
+    dongle,
+    // ambient_1,
+    // ambient_2,
     // bridge_1,
     // irradiance_1,
     // surface_1,
@@ -138,7 +139,7 @@ void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
     char* buff = (char*) incomingData;
     String buffStr = String(buff);
     Serial.println(buffStr);
-    retrySendPayload(buffStr);
+    // retrySendPayload(buffStr);
 }
 
 void setupPeer(const uint8_t *mac) {
