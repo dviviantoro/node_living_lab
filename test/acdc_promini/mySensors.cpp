@@ -66,8 +66,16 @@ String compileDataADS(int channel) {
     adcCT = adcCTSum / NUM_SAMPLES;
     // String adsData = String(adcVT) + "," + String(adcCT);
     
-    voltage = adcVT;
-    current = 0.0111 * adcCT - 214;
+    // voltage = adcVT;
+    // current = 0.0111 * adcCT - 214;
+
+    voltage = (0.0415 * adcVT) - 0.343;
+    current = (-0.0101 * adcCT) + 203;
+
+    Serial.println(channel);
+    Serial.println(adcVT);
+    Serial.println(adcCT);
+
     String adsData = String(voltage) + "," + String(current);
     
     return adsData;
